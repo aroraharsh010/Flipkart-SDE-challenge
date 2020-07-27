@@ -1,0 +1,36 @@
+{
+  "name": "FLIPKART_SDE_2020",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "engines": {
+    "node": "13.1.0"
+  },
+  "scripts": {
+    "eslint": "eslint --init",
+    "start": "nodemon server.js",
+    "lint": "eslint .",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
+    "lintFormat": "eslint --fix src/**/*.{js,jsx,ts,tsx}"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.25",
+    "nodemailer": "^6.4.2",
+    "validator": "^11.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "nodemon": "^1.19.4",
+    "prettier": "^2.0.5"
+  }
+}
