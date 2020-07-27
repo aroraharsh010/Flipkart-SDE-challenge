@@ -1,26 +1,26 @@
 const express = require("express");
 let userRouter = express.Router();
 let {
-  createUser,
-  updateUser,
-  deleteUser,
-  getUser,
-  getAllUser
-} = require("../controller/userController");
+    createUser,
+    updateUser,
+    deleteUser,
+    getUser,
+    getAllUser
+} = require("../../controller/usercontroller");
 let {
-  loginUser,
-  userSignUp,
-  protectRoute,
-  forgotPassword,
-  resetPassword,
-  logoutUser,
-  updateMyPassword
-} = require("../controller/authController");
+    loginUser,
+    userSignUp,
+    protectRoute,
+    forgotPassword,
+    resetPassword,
+    logoutUser,
+    updateMyPassword
+} = require("../../controller/authcontroller");
 // handler
 // routers
 userRouter
-  .route("")
-  .get(getAllUser);
+    .route("")
+    .get(getAllUser);
 // authentication routes
 // resource
 userRouter.route("/login").post(loginUser);
@@ -34,9 +34,9 @@ userRouter.route("/updateUser").patch(protectRoute, updateUser);
 userRouter.route("/updateMyPassword").patch(protectRoute, updateMyPassword);
 
 userRouter
-  .route("/:id")
-  .get(protectRoute, getUser)
-  // req=>updateUser=>// admin
-  .patch(protectRoute, updateUser)
-  .delete(protectRoute, deleteUser);
+    .route("/:id")
+    .get(protectRoute, getUser)
+    // req=>updateUser=>// admin
+    .patch(protectRoute, updateUser)
+    .delete(protectRoute, deleteUser);
 module.exports = userRouter;
