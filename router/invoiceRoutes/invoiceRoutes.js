@@ -1,5 +1,5 @@
 const express = require("express");
-const { postInvoice, getInvoice, updateInvoice } = require("../../controller/invoiceController")
+const { postInvoice, getInvoice, updateInvoice, deleteInvoice } = require("../../controller/invoiceController")
 const { protectRoute } = require("../../controller/authcontroller")
 let invoiceRouter = express.Router();
 
@@ -10,7 +10,8 @@ invoiceRouter
 
 invoiceRouter
     .route("/:id")
-    .patch(protectRoute, updateInvoice);
+    .patch(protectRoute, updateInvoice)
+    .delete(protectRoute, deleteInvoice);
 
 
 module.exports = invoiceRouter;

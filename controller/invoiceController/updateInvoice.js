@@ -4,9 +4,9 @@ const internalServerError = require('../../utils/internalServerError')
 
 module.exports = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id: _id } = req.params;
         let contract = new ValidationContract();
-        contract.isRequired(id, "id");
+        contract.isRequired(_id, "id");
         if (!contract.isValid()) {
             return res
                 .status(400)
@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
                 } else {
                     /*not working needs help*/
                     const updatedInvoice = await InvoiceModel.findOneAndUpdate(
-                        { id, userId },
+                        { _id, userId },
                         { $set: req.body },
                         { new: true }
                     );
