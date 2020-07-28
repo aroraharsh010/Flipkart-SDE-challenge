@@ -54,8 +54,8 @@ module.exports.loginUser = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    res.status(501).json({
-      message: "User not logged"
+    return res.status(501).json({
+      message: err
     });
   }
 };
@@ -110,7 +110,6 @@ module.exports.logoutUser = async (req, res) => {
 module.exports.userSignUp = async (req, res) => {
   try {
     let data = req.body;
-    data.role = "user";
     //   let email = data.email;
     //   let password = data.password;
     let { email, password } = data;
@@ -129,6 +128,7 @@ module.exports.userSignUp = async (req, res) => {
     });
   } catch (err) {
     // res.end(err);
+    return res.status(501, { message: err })
     console.log(err);
   }
 };

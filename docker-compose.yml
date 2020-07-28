@@ -1,18 +1,15 @@
 --- 
 services: 
   flipkart-server: 
-    build:
-      context: .
-      dockerfile: Dockerfile
     command: "bash -c \"npm run start\""
     container_name: shubhamkakkar-flipkart-server
     environment: 
-      - PORT=7788
+      - PORT=8000
     image: "node:10.17"
     ports: 
-      - "81:7788"
+      - "8000:8000"
     volumes:
-      - .:/home/ec2-user/Flipkart-SDE-challenge
-    working_dir: /home/ec2-user/Flipkart-SDE-challenge
+      - .:/Flipkart-SDE-challenge
+
 version: "3"
 

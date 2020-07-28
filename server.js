@@ -15,8 +15,11 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useFindAndModify: false, us
     app.use(express.urlencoded({ extended: true }));
     app.use("/", routes);
     app.get("/test", (req, res) => res.status(200).send({ message: "pong" }));
-    const port = process.env.PORT || 8080;
-    app.listen(() => console.log("app is running at port: ", port))
+    const port = process.env.PORT || 8080
+;
+//	console.log({port});
+    app.listen( () => console.log("app is running at port:", port));
+//        console.log({port});
 
   })
   .catch(er => console.log("failed to connect to mongoose instance"));
