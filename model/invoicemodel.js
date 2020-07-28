@@ -13,6 +13,10 @@ const lineSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+  }
 })
 const invoiceschema = new mongoose.Schema({
   date: {

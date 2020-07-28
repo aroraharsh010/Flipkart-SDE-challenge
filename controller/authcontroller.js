@@ -134,9 +134,6 @@ module.exports.userSignUp = async (req, res) => {
 };
 module.exports.protectRoute = async (req, res, next) => {
   try {
-    // 1. check token exist's ot not
-    // console.log(req.headers);
-    // console.log(req.headers.authorization);
     let token;
     if (req.headers.authorization) {
       token = req.headers.authorization.split(" ")[1];
@@ -145,27 +142,23 @@ module.exports.protectRoute = async (req, res, next) => {
     } else {
       res.end("User is not logged in ");
     }
-    // 2. verify the token
     try {
       let decode = jsonwebtoken.verify(token, secret);
       const user = await UserModel.findById(decode.result);
-      // console.log(user);
       if (!user) {
         res.end("user does not exist");
       }
-      // 4. password update
-      // db => ADMIN,User
       req.headers.role = user.role;
       req.headers.user = user;
-      // user.password = undefined;
       res.locals.user = user;
+      req.user = user;
       next();
-    } catch (err) {
-      return res.end("User is not authenticated");
+    } catch (error) {
+      console.log({ error })
+      return res.status(400).send({ message: "User is not authenticated", error });
     }
-  } catch (err) {
-    // res.json(err);
-    console.log(err);
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error", error });
   }
 };
 
