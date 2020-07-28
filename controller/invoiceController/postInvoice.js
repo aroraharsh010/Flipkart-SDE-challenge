@@ -1,7 +1,7 @@
-const ValidationContract = require('../utils/validator')
-const InvoiceModel = require('../model/invoicemodel');
+const ValidationContract = require('../../utils/validator')
+const InvoiceModel = require('../../model/invoicemodel');
 
-module.exports.postInvoice = async (req, res) => {
+module.exports = async (req, res) => {
     const { _id: userId } = req.user;
     const {
         date,
@@ -43,13 +43,24 @@ module.exports.postInvoice = async (req, res) => {
             userId,
             ...req.body
         }
-        const invoice = await InvoiceModel.create(invoicePayload);
-        return res
-            .status(201)
-            .send({
-                message: 'Invoice Created',
-                invoice,
-            })
+
+        const oldInvoice = await InvoiceModel.find({ invoice_number, userId });
+
+        if (!oldInvoice.length) {
+            const invoice = await InvoiceModel.create(invoicePayload);
+            return res
+                .status(201)
+                .send({
+                    message: 'Invoice Created',
+                    invoice,
+                })
+        } else {
+            return res
+                .status(400)
+                .send({
+                    message: 'Invoice already exists with same invoice number',
+                })
+        }
 
     } else {
         return res

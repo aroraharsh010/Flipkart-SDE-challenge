@@ -110,26 +110,29 @@ module.exports.logoutUser = async (req, res) => {
 module.exports.userSignUp = async (req, res) => {
   try {
     let data = req.body;
-    //   let email = data.email;
-    //   let password = data.password;
     let { email, password } = data;
     if (!email || !password) {
       res.end("Email or Password is not present!");
     }
-    let user = await UserModel.create(data);
-    const token = jsonwebtoken.sign({ result: user._id }, secret, {
-      expiresIn: "10d"
-    });
+    let oldUser = await UserModel.find({ email });
+    if (oldUser.length) {
+      return res.status(400).send({
+        message: "User already exists",
+      });
+    } else {
+      let user = await UserModel.create(req.body);
+      const token = jsonwebtoken.sign({ result: user._id }, secret, {
+        expiresIn: "10d"
+      });
 
-    return res.status(201).json({
-      status: "Success SignUp",
-      token,
-      user
-    });
-  } catch (err) {
-    // res.end(err);
-    return res.status(501, { message: err })
-    console.log(err);
+      return res.status(201).send({
+        status: "Success SignUp",
+        token,
+        user
+      });
+    }
+  } catch (error) {
+    return res.status(501).send({ message: error })
   }
 };
 module.exports.protectRoute = async (req, res, next) => {
