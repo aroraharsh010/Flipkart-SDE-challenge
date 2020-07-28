@@ -13,10 +13,7 @@ const lineSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  userId: {
-    type: String,
-    required: true,
-  }
+
 })
 const invoiceschema = new mongoose.Schema({
   date: {
@@ -35,7 +32,11 @@ const invoiceschema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  lines: [lineSchema]
+  lines: [lineSchema],
+  userId: {
+    type: String,
+    required: true,
+  }
 });
 
 const InvoiceModel = mongoose.model("InvoiceModel", invoiceschema);

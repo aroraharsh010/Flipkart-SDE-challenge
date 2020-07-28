@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
-const crypto = require("crypto");
-let { dbpass } = require("../utils/config");
 
 //schema=>Set Of Rules
 const userschema = new mongoose.Schema({
