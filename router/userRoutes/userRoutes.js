@@ -1,7 +1,6 @@
 const express = require("express");
 let userRouter = express.Router();
 let {
-    createUser,
     updateUser,
     deleteUser,
     getUser,
@@ -11,10 +10,7 @@ let {
     loginUser,
     userSignUp,
     protectRoute,
-    forgotPassword,
-    resetPassword,
     logoutUser,
-    updateMyPassword
 } = require("../../controller/authcontroller");
 // handler
 // routers
@@ -26,12 +22,6 @@ userRouter
 userRouter.route("/login").post(loginUser);
 userRouter.route("/signup").post(userSignUp);
 userRouter.route("/logout").get(logoutUser);
-
-userRouter.route("/forgetPassword").post(forgotPassword);
-userRouter.route("/resetPassword/:token").patch(resetPassword);
-// req.header =>user
-userRouter.route("/updateUser").patch(protectRoute, updateUser);
-userRouter.route("/updateMyPassword").patch(protectRoute, updateMyPassword);
 
 userRouter
     .route("/:id")
