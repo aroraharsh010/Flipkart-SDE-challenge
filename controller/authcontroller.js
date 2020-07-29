@@ -1,61 +1,63 @@
-const UserModel = require("../model/usermodel");
-const jsonwebtoken = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const secret = "secretKey";
-const crypto = require("crypto");
-let { sendEmail } = require("../utils/email");
+const UserModel = require('../model/usermodel');
+const jsonwebtoken = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
+const secret = 'secretKey';
+const crypto = require('crypto');
+const { sendEmail } = require('../utils/email');
+
 module.exports.authorizeeasy = (req, res, next) => {
-  if (req.headers.role === "admin" || req.headers.role === "writer") {
+  if (req.headers.role === 'admin' || req.headers.role === 'writer') {
     next();
   } else {
-    res.end("user is not authorized");
+    res.end('user is not authorized');
   }
 };
 module.exports.authorize = function (...args) {
-  let roles = args;
+  const roles = args;
   return function (req, res, next) {
     if (roles.includes(req.headers.role)) {
       next();
     } else {
-      res.end("user is not authorized");
+      res.end('user is not authorized');
     }
   };
 };
 module.exports.loginUser = async (req, res) => {
   try {
-    let data = req.body;
-    let { email, password } = data;
+    const data = req.body;
+    const { email, password } = data;
     if (!email || !password) {
-      res.end("Email or Password is not present!");
+      res.end('Email or Password is not present!');
       return;
     }
-    let userData = await UserModel.findOne({
-      email: email
+    const userData = await UserModel.findOne({
+      email,
     });
     if (!userData) {
-      res.end("User Not Found!");
+      res.end('User Not Found!');
       return;
     }
-    let dbPassword = userData.password;
-    let ans = await bcrypt.compare("" + password, dbPassword);
+    const dbPassword = userData.password;
+    const ans = await bcrypt.compare(`${password}`, dbPassword);
     if (!ans) {
-      res.end("Wrong Password!");
+      res.end('Wrong Password!');
       return;
     }
     //   res.status(200).end("user logged in");
-    const JWTtoken = jsonwebtoken.sign({ result: userData["_id"] }, secret, {
-      expiresIn: "2d"
+    const JWTtoken = jsonwebtoken.sign({ result: userData._id }, secret, {
+      expiresIn: '2d',
     });
-    res.cookie("jwt", JWTtoken, { httpOnly: true });
+    res.cookie('jwt', JWTtoken, { httpOnly: true });
     res.status(201).json({
-      status: "Success Login",
+      status: 'Success Login',
       token: JWTtoken,
-      message: "Welcome " + userData.name
+      message: `Welcome ${userData.name}`,
     });
   } catch (err) {
     console.log(err);
     return res.status(501).json({
-      message: err
+      message: err,
     });
   }
 };
@@ -67,7 +69,7 @@ module.exports.isLoggedIn = async (req, res, next) => {
       token = req.cookies.jwt;
       console.log(token);
       // 2. verify the token
-      let decode = jsonwebtoken.verify(token, secret);
+      const decode = jsonwebtoken.verify(token, secret);
       if (!decode) {
         // res.end("User is not authenticated");
         return next();
@@ -75,7 +77,7 @@ module.exports.isLoggedIn = async (req, res, next) => {
       console.log(decode);
       // 3. check that user associated with the token exist in db or not
       // user name:steve
-      //role:admin
+      // role:admin
       const user = await UserModel.findById(decode.id);
       if (!user) {
         // res.end("user does not exist");
@@ -88,9 +90,8 @@ module.exports.isLoggedIn = async (req, res, next) => {
       // pug file
       res.locals.user = user;
       return next();
-    } else {
-      return next();
     }
+    return next();
   } catch (err) {
     res.json(err);
     // console.log(err);
@@ -98,58 +99,57 @@ module.exports.isLoggedIn = async (req, res, next) => {
   }
 };
 module.exports.logoutUser = async (req, res) => {
-  res.cookie("jwt", "Logged Out", {
+  res.cookie('jwt', 'Logged Out', {
     expires: new Date(Date.now() + 20),
-    httpOnly: true
+    httpOnly: true,
   });
   res.status(201).json({
-    status: "Success LogOut",
-    message: "User Logged Out"
+    status: 'Success LogOut',
+    message: 'User Logged Out',
   });
 };
 module.exports.userSignUp = async (req, res) => {
   try {
-    let data = req.body;
-    let { email, password } = data;
+    const data = req.body;
+    const { email, password } = data;
     if (!email || !password) {
-      res.end("Email or Password is not present!");
+      res.end('Email or Password is not present!');
     }
-    let oldUser = await UserModel.find({ email });
+    const oldUser = await UserModel.find({ email });
     if (oldUser.length) {
       return res.status(400).send({
-        message: "User already exists",
-      });
-    } else {
-      let user = await UserModel.create(req.body);
-      const token = jsonwebtoken.sign({ result: user._id }, secret, {
-        expiresIn: "10d"
-      });
-
-      return res.status(201).send({
-        status: "Success SignUp",
-        token,
-        user
+        message: 'User already exists',
       });
     }
+    const user = await UserModel.create(req.body);
+    const token = jsonwebtoken.sign({ result: user._id }, secret, {
+      expiresIn: '10d',
+    });
+
+    return res.status(201).send({
+      status: 'Success SignUp',
+      token,
+      user,
+    });
   } catch (error) {
-    return res.status(501).send({ message: error })
+    return res.status(501).send({ message: error });
   }
 };
 module.exports.protectRoute = async (req, res, next) => {
   try {
     let token;
     if (req.headers.authorization) {
-      token = req.headers.authorization.split(" ")[1];
+      token = req.headers.authorization.split(' ')[1];
     } else if (req.cookies.jwt) {
       token = req.cookies.jwt;
     } else {
-      res.end("User is not logged in ");
+      res.end('User is not logged in ');
     }
     try {
-      let decode = jsonwebtoken.verify(token, secret);
+      const decode = jsonwebtoken.verify(token, secret);
       const user = await UserModel.findById(decode.result);
       if (!user) {
-        res.end("user does not exist");
+        res.end('user does not exist');
       }
       req.headers.role = user.role;
       req.headers.user = user;
@@ -157,61 +157,56 @@ module.exports.protectRoute = async (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      console.log({ error })
-      return res.status(400).send({ message: "User is not authenticated", error });
+      console.log({ error });
+      return res.status(400).send({ message: 'User is not authenticated', error });
     }
   } catch (error) {
-    return res.status(500).send({ message: "Internal Server Error", error });
+    return res.status(500).send({ message: 'Internal Server Error', error });
   }
 };
 
 module.exports.forgotPassword = async (req, res) => {
-  const email = req.body.email;
+  const { email } = req.body;
   if (!email) {
-    res.end("Please enter your email id");
+    res.end('Please enter your email id');
   }
-  const user = await UserModel.findOne({ email: email });
+  const user = await UserModel.findOne({ email });
   if (!user) {
-    res.end("User not found");
+    res.end('User not found');
   }
-  let token = user.createResetToken();
+  const token = user.createResetToken();
   await user.save({ validateBeforeSave: false });
-  let message =
-    "Your reset token is sent! Please visit /createPassword and change password using provided token \n Your token:" +
-    token;
+  const message = `Your reset token is sent! Please visit /createPassword and change password using provided token \n Your token:${token}`;
   try {
     sendEmail({
       receiverId: user.email,
-      message: message,
-      subject: "Token only valid for 10mins"
+      message,
+      subject: 'Token only valid for 10mins',
     });
     res.json({
-      status: "Email Sent"
+      status: 'Email Sent',
     });
   } catch (err) {
     console.log(err);
   }
 };
 module.exports.resetPassword = async (req, res) => {
-  //1. get Token from user
+  // 1. get Token from user
   console.log(req.body);
-  let token = req.body.token;
+  const { token } = req.body;
   if (!token) {
-    res.end("Enter token");
+    res.end('Enter token');
   }
 
-  const encryptedToken = crypto
-    .createHash("sha256")
-    .update(token)
-    .digest("hex");
-  //2. verify token
+  const encryptedToken = crypto.createHash('sha256').update(token).digest('hex');
+  // 2. verify token
   console.log(encryptedToken);
-  let user = await UserModel.findOne({ resetToken: encryptedToken });
+  const user = await UserModel.findOne({ resetToken: encryptedToken });
   if (!user) {
-    res.end("Invalid Auth token");
+    res.end('Invalid Auth token');
     return;
   }
-  //3. Update password
+  // 3. Update password
   console.log(user);
   user.password = req.body.password;
   user.confirmPassword = req.body.confirmPassword;
@@ -219,7 +214,7 @@ module.exports.resetPassword = async (req, res) => {
   user.expiresIn = undefined;
   user.save();
   res.json({
-    status: "User Password Updated"
+    status: 'User Password Updated',
   });
 };
 module.exports.updateMyPassword = async (req, res) => {
@@ -229,13 +224,13 @@ module.exports.updateMyPassword = async (req, res) => {
   // ui
 
   const password = req.body.currentPassword;
-  console.log(dbPassword + " " + password);
+  console.log(`${dbPassword} ${password}`);
   // db
-  const user = req.headers.user;
-  let ans = await bcrypt.compare("" + password, dbPassword);
+  const { user } = req.headers;
+  const ans = await bcrypt.compare(`${password}`, dbPassword);
   if (!ans) {
     // new Error("Password was wrong")
-    res.end("password is wrong");
+    res.end('password is wrong');
     return;
   }
   //  model user password update
@@ -250,6 +245,6 @@ module.exports.updateMyPassword = async (req, res) => {
   // });
   // res.cookie("jwt", JWTtoken, { httpOnly: "true" });
   res.json({
-    status: "user Password Updated"
+    status: 'user Password Updated',
   });
 };

@@ -1,1 +1,1 @@
-module.exports = require("./invoiceRoutes")
+module.exports = require('./invoiceRoutes');

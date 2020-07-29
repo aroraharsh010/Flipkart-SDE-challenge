@@ -1,13 +1,13 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const validator = require("validator");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
 
-//schema=>Set Of Rules
+// schema=>Set Of Rules
 const userschema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    validate: validator.isAlpha
+    validate: validator.isAlpha,
   },
   userName: {
     type: String,
@@ -17,21 +17,21 @@ const userschema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    validate: validator.isEmail
+    validate: validator.isEmail,
   },
   password: {
     type: String,
     required: true,
-    min: 5
+    min: 5,
   },
   role: {
     type: String,
     required: true,
-    enum: ["admin", "vendor"],
-    default: "vendor"
+    enum: ['admin', 'vendor'],
+    default: 'vendor',
   },
 });
-userschema.pre("save", async function () {
+userschema.pre('save', async () => {
   this.password = await bcrypt.hash(this.password, 10);
 });
 // userschema.methods.createResetToken = function() {
@@ -43,6 +43,6 @@ userschema.pre("save", async function () {
 //   this.expiresIn = Date.now() + 1000 * 60 * 10; //10mins expiry time
 //   return resetToken;
 // };
-const UserModel = mongoose.model("UserModel", userschema);
+const UserModel = mongoose.model('UserModel', userschema);
 
 module.exports = UserModel;

@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const lineSchema = new mongoose.Schema({
   price: {
     type: Number,
-    required: true
+    required: true,
   },
   desc: {
     type: String,
@@ -13,8 +13,7 @@ const lineSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-
-})
+});
 const invoiceschema = new mongoose.Schema({
   date: {
     type: String,
@@ -40,8 +39,8 @@ const invoiceschema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
-  }
+  },
 });
 
-const InvoiceModel = mongoose.model("InvoiceModel", invoiceschema);
+const InvoiceModel = mongoose.model('InvoiceModel', invoiceschema);
 module.exports = InvoiceModel;
