@@ -6,9 +6,10 @@
   "scripts": {
     "eslint": "eslint --init",
     "start": "nodemon -r esm server.js",
+    "start:dev": "fuser -k -n tcp 8000 & PORT=8000 npm run start",
     "lint": "eslint .",
-    "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
-    "lintFormat": "eslint --fix src/**/*.{js,jsx,ts,tsx}"
+    "format": "prettier --write ./**/*.{js,jsx,ts,tsx}",
+    "lintFormat": "eslint --fix ./**/*.{js,jsx,ts,tsx}"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "eslint": "^7.5.0",
     "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
     "nodemon": "^1.19.4",
     "prettier": "^2.0.5"
