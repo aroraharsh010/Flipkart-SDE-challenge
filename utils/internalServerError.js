@@ -1,1 +1,4 @@
-module.exports = async (res, error) => res.status(501).send({ error, message: "Internal Server Error" })
+module.exports = async (res, error) => {
+    console.log({ error })
+    return res.status(501).send({ error, message: "Internal Server Error" })
+}

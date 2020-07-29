@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
                             status: 'Bad Request',
                         });
                 } else {
-                    /*not working needs help*/
+                    /*todo: lines ka sort kro*/
                     const updatedInvoice = await InvoiceModel.findOneAndUpdate(
                         { _id, userId },
                         { $set: req.body },

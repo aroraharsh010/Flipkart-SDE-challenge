@@ -6,7 +6,7 @@
   "scripts": {
     "eslint": "eslint --init",
     "start": "nodemon -r esm server.js",
-    "start:dev": "PORT=8000 npm run start",
+    "start:dev": "fuser -k -n tcp 8000 & PORT=8000 npm run start",
     "lint": "eslint .",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
     "lintFormat": "eslint --fix src/**/*.{js,jsx,ts,tsx}"

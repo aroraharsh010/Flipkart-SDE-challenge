@@ -10,11 +10,13 @@ module.exports = async (req, res) => {
             invoice_number,
             amount,
             desc,
-            lines
+            lines,
+            url
         } = req.body;
 
         let contract = new ValidationContract();
         contract.isRequired(date, "date");
+        contract.isRequired(url, "url");
         contract.isRequired(invoice_number, "invoice_number");
         contract.isRequired(amount, "amount");
         contract.isRequired(desc, "desc");
