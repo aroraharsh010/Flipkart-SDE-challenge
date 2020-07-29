@@ -44,11 +44,11 @@ module.exports.getAllUser = async (req, res) => {
     // // filter parameters=> sort,pagination,filter,limit
     const ExcludefromQuery = ['filter', 'limit', 'page', 'sort'];
 
-    ExcludefromQuery.map((exclude) => queryObj[exclude])
+    ExcludefromQuery.map((exclude) => queryObj[exclude]);
     let queryString = JSON.stringify(queryObj);
     // // /\b(gt|gte|lte|lt)\b/g
 
-    queryString = queryString.replace(/\b(gt|gte|lt|lte)\b/g, (match) => match)
+    queryString = queryString.replace(/\b(gt|gte|lt|lte)\b/g, (match) => match);
     queryObj = JSON.parse(queryString);
     let result = UserModel.find(queryObj);
     if (query.sort) {

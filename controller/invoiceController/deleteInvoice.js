@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
     const { _id: userId } = req.user;
 
     const temp = await InvoiceModel.findOneAndDelete({ _id, userId });
-    res.status(200).send({
+    return res.status(200).send({
       message: 'deleted',
       temp,
     });

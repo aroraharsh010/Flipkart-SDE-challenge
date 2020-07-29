@@ -22,9 +22,9 @@ module.exports = async (req, res) => {
       });
     }
     const contractLine = new ValidationContract();
-    const isLinesValid = lines.some(({ price, desc, qty }) => {
+    const isLinesValid = lines.some(({ price, desc: descLine, qty }) => {
       contractLine.isRequired(price, 'each line require price');
-      contractLine.isRequired(desc, 'each line require desc');
+      contractLine.isRequired(descLine, 'each line require desc');
       contractLine.isRequired(qty, 'each line require qty');
       return contract.isValid();
     });

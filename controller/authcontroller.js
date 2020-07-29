@@ -1,10 +1,11 @@
-const UserModel = require('../model/usermodel');
 const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const UserModel = require('../model/usermodel');
 
 const secret = 'secretKey';
-const crypto = require('crypto');
 const { sendEmail } = require('../utils/email');
+const internalServerError = require('../utils/internalServerError');
 
 module.exports.authorizeeasy = (req, res, next) => {
   if (req.headers.role === 'admin' || req.headers.role === 'writer') {
@@ -13,16 +14,14 @@ module.exports.authorizeeasy = (req, res, next) => {
     res.end('user is not authorized');
   }
 };
-module.exports.authorize = function (...args) {
+module.exports.authorize = (...args) => {
   const roles = args;
-  return function (req, res, next) {
-    if (roles.includes(req.headers.role)) {
-      next();
-    } else {
-      res.end('user is not authorized');
-    }
-  };
+  return (req, res, next) =>
+    roles.includes(req.headers.role)
+      ? next()
+      : res.status(400).send({ message: 'user is not authorized' });
 };
+
 module.exports.loginUser = async (req, res) => {
   try {
     const data = req.body;
@@ -39,26 +38,21 @@ module.exports.loginUser = async (req, res) => {
       return;
     }
     const dbPassword = userData.password;
-    const ans = await bcrypt.compare(`${password}`, dbPassword);
+    const ans = await bcrypt.compare(password, dbPassword);
     if (!ans) {
       res.end('Wrong Password!');
       return;
     }
-    //   res.status(200).end("user logged in");
-    const JWTtoken = jsonwebtoken.sign({ result: userData._id }, secret, {
-      expiresIn: '2d',
-    });
-    res.cookie('jwt', JWTtoken, { httpOnly: true });
-    res.status(201).json({
+    const JWTtoken = jsonwebtoken.sign({ result: userData._id }, secret);
+    // eslint-disable-next-line consistent-return
+    return res.status(201).send({
       status: 'Success Login',
       token: JWTtoken,
-      message: `Welcome ${userData.name}`,
     });
-  } catch (err) {
-    console.log(err);
-    return res.status(501).json({
-      message: err,
-    });
+  } catch (error) {
+    console.log(error);
+    // eslint-disable-next-line consistent-return
+    return internalServerError(res, error);
   }
 };
 module.exports.isLoggedIn = async (req, res, next) => {
@@ -139,7 +133,7 @@ module.exports.protectRoute = async (req, res, next) => {
   try {
     let token;
     if (req.headers.authorization) {
-      token = req.headers.authorization.split(' ')[1];
+      [token] = req.headers.authorization.split(' ');
     } else if (req.cookies.jwt) {
       token = req.cookies.jwt;
     } else {
@@ -156,6 +150,7 @@ module.exports.protectRoute = async (req, res, next) => {
       res.locals.user = user;
       req.user = user;
       next();
+      return 0;
     } catch (error) {
       console.log({ error });
       return res.status(400).send({ message: 'User is not authenticated', error });

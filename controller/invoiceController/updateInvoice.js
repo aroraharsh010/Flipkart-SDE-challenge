@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const ValidationContract = require('../../utils/validator');
 const InvoiceModel = require('../../model/invoicemodel');
 const internalServerError = require('../../utils/internalServerError');
