@@ -1,5 +1,5 @@
-const modelEnumsOfInvoiceStatus = ['pending', 'accepted', 'rejected', 'changeRequested']
+const modelEnumsOfInvoiceStatus = ['pending', 'accepted', 'rejected', 'changeRequested'];
 
 module.exports = {
-    modelEnumsOfInvoiceStatus
-}
+  modelEnumsOfInvoiceStatus,
+};

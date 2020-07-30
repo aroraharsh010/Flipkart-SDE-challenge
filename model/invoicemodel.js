@@ -48,8 +48,8 @@ const invoiceschema = new mongoose.Schema({
   },
   comment: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 });
 
 const InvoiceModel = mongoose.model('InvoiceModel', invoiceschema);
