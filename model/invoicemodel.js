@@ -40,6 +40,15 @@ const invoiceschema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ['pending', 'accepted', 'rejected', 'changeRequested'],
+    default: 'pending',
+  },
+  comment: {
+    type: String,
+    default: ''
+  }
 });
 
 const InvoiceModel = mongoose.model('InvoiceModel', invoiceschema);
