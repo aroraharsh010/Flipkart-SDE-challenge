@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { modelEnumsOfInvoiceStatus } = require('../globalConstants');
 
 const lineSchema = new mongoose.Schema({
   price: {
@@ -42,7 +43,7 @@ const invoiceschema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'rejected', 'changeRequested'],
+    enum: modelEnumsOfInvoiceStatus,
     default: 'pending',
   },
   comment: {
