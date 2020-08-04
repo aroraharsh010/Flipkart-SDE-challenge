@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { modelEnumsOfInvoiceStatus } = require('../globalConstants');
+const { emailId } = require('../utils/config');
 
 const lineSchema = new mongoose.Schema({
   price: {
@@ -10,12 +11,34 @@ const lineSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  gstRate:{
+    type:Number,
+  },
   qty: {
     type: Number,
     required: true,
   },
+  pid:{
+    type: String,
+  },
+  rate:{
+    type:Number,
+  }
 });
 const invoiceschema = new mongoose.Schema({
+  cName:{
+    type: String,
+    required:true,
+  },
+  cAddress:{
+    type: String,
+  },
+  cEmail:{
+    type:String,
+  },
+  cGstIn:{
+    type:String,
+  },
   date: {
     type: String,
     required: true,
@@ -30,11 +53,10 @@ const invoiceschema = new mongoose.Schema({
   },
   amount: {
     type: Number,
-    required: true,
+    required:true,
   },
   desc: {
     type: String,
-    required: true,
   },
   lines: [lineSchema],
   userId: {
