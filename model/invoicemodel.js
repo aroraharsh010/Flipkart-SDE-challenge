@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { modelEnumsOfInvoiceStatus } = require('../globalConstants');
-const { emailId } = require('../utils/config');
 
 const lineSchema = new mongoose.Schema({
   price: {
