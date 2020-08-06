@@ -48,6 +48,7 @@ module.exports.loginUser = async (req, res) => {
     return res.status(201).send({
       status: 'Success Login',
       token: JWTtoken,
+      user: userData,
     });
   } catch (error) {
     console.log(error);
