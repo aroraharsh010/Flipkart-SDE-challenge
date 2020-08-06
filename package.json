@@ -25,14 +25,14 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.25",
     "nodemailer": "^6.4.2",
-    "validator": "^11.1.0"
+    "validator": "^11.1.0",
+    "nodemon": "^1.19.4"
   },
   "devDependencies": {
     "eslint": "^7.5.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
-    "nodemon": "^1.19.4",
     "prettier": "^2.0.5"
   }
 }
