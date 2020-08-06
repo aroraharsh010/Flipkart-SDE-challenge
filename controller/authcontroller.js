@@ -115,7 +115,10 @@ module.exports.userSignUp = async (req, res) => {
         message: 'User already exists',
       });
     }
-    const user = await UserModel.create(req.body);
+    const user = await UserModel.create({
+      ...req.body,
+      password :  await bcrypt.hash(password, 10)
+    });
     const token = jsonwebtoken.sign({ result: user._id }, secret, {
       expiresIn: '10d',
     });
