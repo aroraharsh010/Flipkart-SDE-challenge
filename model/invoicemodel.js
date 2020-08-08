@@ -27,7 +27,6 @@ const lineSchema = new mongoose.Schema({
 const invoiceschema = new mongoose.Schema({
   cName:{
     type: String,
-    required:true,
   },
   cAddress:{
     type: String,
