@@ -9,3 +9,5 @@ For WebPanel,<br>
 3. navigate into the web-panel codebase folder <br>
 4. use npm install to install all the dependencies <br>
 5. use npm run start to start the project on your local machine. <br>
+
+#### Code for Android App: https://github.com/sankalpchauhan-me/Flipkart-Grid-2-Android-App
