@@ -1,0 +1,18 @@
+﻿issuer: VIRTUALCOMPANYIND
+keywords:
+- VIRTUALCOMPANYIND
+fields:
+  cGst: GSTIN :.*\$(\d+\.\d+)
+  cEmail: E-Mail :.*\$(\d+\.\d+)
+  amount: TOTAL AMOUNT.*\$(\d+\.\d+)
+  date: Dated:\s+([a-zA-Z]+ \d+ , \d+)
+  invoice_number: Invoice No.:\s+(\d+)
+options:
+  remove_whitespace: false
+  currency: HKD
+  date_formats:
+    - '%d/%m/%Y'
+lines:
+  start: Description of Goods	\s + HSN/SAC\s + GST Rate\s + Quantity\s + Rate\s + Amount$
+  end: \s+Total
+  line: (?P<description>.+)\s+(?P<discount>\d+.\d+)\s+(?P<price>\d+\d+)

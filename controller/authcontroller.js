@@ -48,6 +48,7 @@ module.exports.loginUser = async (req, res) => {
     return res.status(201).send({
       status: 'Success Login',
       token: JWTtoken,
+      user: userData,
     });
   } catch (error) {
     console.log(error);
@@ -115,7 +116,10 @@ module.exports.userSignUp = async (req, res) => {
         message: 'User already exists',
       });
     }
-    const user = await UserModel.create(req.body);
+    const user = await UserModel.create({
+      ...req.body,
+      password :  await bcrypt.hash(password, 10)
+    });
     const token = jsonwebtoken.sign({ result: user._id }, secret, {
       expiresIn: '10d',
     });
@@ -131,30 +135,28 @@ module.exports.userSignUp = async (req, res) => {
 };
 module.exports.protectRoute = async (req, res, next) => {
   try {
-    let token;
-    if (req.headers.authorization) {
-      [token] = req.headers.authorization.split(' ');
-    } else if (req.cookies.jwt) {
-      token = req.cookies.jwt;
+    const token = req.headers.authorization.split(' ')[1];
+    if (token) {
+      try {
+        const decode = jsonwebtoken.verify(token, secret);
+        const user = await UserModel.findById(decode.result);
+        if (!user) {
+          return res.end('user does not exist');
+        }
+        req.headers.role = user.role;
+        req.headers.user = user;
+        res.locals.user = user;
+        req.user = user;
+        next();
+        return 0;
+      } catch (error) {
+        console.log({ error });
+        return res.status(400).send({ message: 'User is not authenticated', error });
+      }  
     } else {
-      res.end('User is not logged in ');
+      return res.end('User is not logged in ');
     }
-    try {
-      const decode = jsonwebtoken.verify(token, secret);
-      const user = await UserModel.findById(decode.result);
-      if (!user) {
-        res.end('user does not exist');
-      }
-      req.headers.role = user.role;
-      req.headers.user = user;
-      res.locals.user = user;
-      req.user = user;
-      next();
-      return 0;
-    } catch (error) {
-      console.log({ error });
-      return res.status(400).send({ message: 'User is not authenticated', error });
-    }
+    
   } catch (error) {
     return res.status(500).send({ message: 'Internal Server Error', error });
   }

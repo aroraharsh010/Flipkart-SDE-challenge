@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
 // schema=>Set Of Rules
@@ -31,9 +30,7 @@ const userschema = new mongoose.Schema({
     default: 'vendor',
   },
 });
-userschema.pre('save', async () => {
-  this.password = await bcrypt.hash(this.password, 10);
-});
+
 // userschema.methods.createResetToken = function() {
 //   const resetToken = crypto.randomBytes(32).toString("hex");
 //   this.resetToken = crypto
